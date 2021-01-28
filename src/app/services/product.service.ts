@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
+import {
+  AngularFirestore,
+  AngularFirestoreCollection,
+} from '@angular/fire/firestore';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { Category } from '../class/category';
 import { Product } from '../class/product';
 
@@ -8,78 +12,40 @@ import { Product } from '../class/product';
   providedIn: 'root',
 })
 export class ProductService {
-  products: Product[] = [
-    new Product(
-      'asdasda',
-      'Product 1',
-      'this is a product',
-      20,
-      '',
-      new Category('metal')
-    ),
-    new Product(
-      'asdassd',
-      'Product 2',
-      'this is a product',
-      2,
-      '',
-      new Category('metal')
-    ),
-    new Product(
-      'asdrwqe32',
-      'Product 3',
-      'this is a product',
-      12,
-      '',
-      new Category('metal')
-    ),
-    new Product(
-      'asdas4123a',
-      'Product 4',
-      'this is a product',
-      22,
-      '',
-      new Category('tuveria')
-    ),
-    new Product(
-      'asdasdaewq1',
-      'Product 5',
-      'this is a product',
-      36,
-      '',
-      new Category('aluminio')
-    ),
-    new Product(
-      'adfasdaewq1',
-      'Product 6',
-      'this is a product',
-      46,
-      '',
-      new Category('metal')
-    ),
-    new Product(
-      'asdqwewq1',
-      'Product 7',
-      'this is a product',
-      66,
-      '',
-      new Category('tuveria')
-    ),
-  ];
+  productObservable: Observable<Product[]>;
+  private productsFireStore: AngularFirestoreCollection<Product>;
+
+  loading = true;
+
+  products: Product[] = [];
 
   category: Category[] = [];
 
   obsArray: BehaviorSubject<Product[]> = new BehaviorSubject<Product[]>([]);
   productArray$: Observable<Product[]> = this.obsArray.asObservable();
 
-  constructor() {
-    this.resetFilters();
+  constructor(private afs: AngularFirestore) {
+    this.productsFireStore = this.afs.collection<Product>('products');
+    this.productObservable = this.productsFireStore
+      .snapshotChanges()
+      .pipe(
+        map((actions) => actions.map((a) => a.payload.doc.data() as Product))
+      );
+    this.initializateProductArray();
+  }
+
+  private initializateProductArray(): void {
+    this.productObservable.subscribe((product) => {
+      this.products = product;
+      this.resetFilters();
+      this.loading = false;
+    });
   }
 
   resetFilters(): void {
     this.productArray$.pipe(take(1)).subscribe(() => {
-      const newProduct: Product[] = this.products;
-      this.obsArray.next(newProduct);
+      this.obsArray.next(this.products);
+      console.log(this.products);
     });
   }
 

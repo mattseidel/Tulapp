@@ -9,6 +9,9 @@ export class CategoryService {
     { name: 'metales' },
     { name: 'aluminio' },
     { name: 'tuveria' },
+    { name: 'herramientas' },
+    { name: 'Escaleras' },
+    { name: 'equipos protección individual' },
   ];
 
   constructor() {}

@@ -1,4 +1,7 @@
 <div class="card mb-4 box-shadow">
+  <div class="card-header title">
+    <h4>{{ productItem?.name }}</h4>
+  </div>
   <img
     class="card-img-top"
     data-src="holder.js/100px225?theme=thumb&amp;bg=55595c&amp;fg=eceeef&amp;text=Thumbnail"
@@ -18,7 +21,7 @@
     <div class="btn-group d-flex justify-content-center">
       <button
         type="button"
-        class="btn btn-sm btn-outline-primary d-flex justify-content-around"
+        class="btn btn-sm btn-outline-primary d-flex justify-content-around mb-0"
         (click)="onAddCart(productItem)"
       >
         <i class="fas fa-cart-plus"></i> Añadir al carrito

@@ -16,6 +16,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { PriceComponent } from './components/shopping-cart/filters/price/price.component';
 import { NameComponent } from './components/shopping-cart/filters/name/name.component';
 import { CartComponent } from './components/shopping-cart/cart/cart.component';
+import { AngularFireModule } from '@angular/fire';
+import { environment } from 'src/environments/environment';
+import { AngularFirestore } from '@angular/fire/firestore';
 @NgModule({
   declarations: [
     AppComponent,
@@ -35,8 +38,9 @@ import { CartComponent } from './components/shopping-cart/cart/cart.component';
     HeaderModule,
     HttpClientModule,
     ReactiveFormsModule,
+    AngularFireModule.initializeApp(environment.firebaseConfig),
   ],
-  providers: [],
+  providers: [AngularFirestore],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
