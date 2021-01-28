@@ -1,0 +1,11 @@
+<form [formGroup]="filterByPriceForm" (ngSubmit)="onSubmitFilterByPrice(filterByPriceForm.value)">
+  <div class="mb-3">
+    <label for="exampleFormControlInput1" class="form-label">Desde</label>
+    <input type="number" class="form-control" formControlName="from" />
+  </div>
+  <div class="mb-3">
+    <label for="exampleFormControlInput1" class="form-label">Hasta</label>
+    <input type="number" class="form-control" formControlName="to" />
+  </div>
+  <button class="btn btn-primary btn-block">Filtrar por precio</button>
+</form>

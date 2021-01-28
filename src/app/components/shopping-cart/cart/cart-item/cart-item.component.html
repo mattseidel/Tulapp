@@ -1,0 +1,18 @@
+<div class="d-flex justify-content-between">
+  <div>
+    <span>{{ cart.name }}</span> x <span>{{ cart.qty }} </span>:
+    <strong>{{ cart.price * cart.qty | currency: "USD" }} </strong>
+  </div>
+  <div>
+    <button
+      *ngIf="cart.qty !== 1"
+      class="mx-1 btn btn-danger btn-sm"
+      (click)="onRemoveQuantyItem(cart)"
+    >
+      <i class="fas fa-minus"></i>
+    </button>
+    <button class="btn btn-danger btn-sm" (click)="onRemoveItem(cart)">
+      <i class="fas fa-trash"></i>
+    </button>
+  </div>
+</div>

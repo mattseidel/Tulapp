@@ -1,0 +1,11 @@
+<div class="alert alert-danger" *ngIf="productList.length === 0 ; else elseTemplate">
+  Ningún elemento se ajusta a sus preferencias de búsqueda
+</div>
+
+<ng-template #elseTemplate>
+  <div class="row">
+    <div class="col-md-6" *ngFor="let product of productList">
+      <app-product-item [productItem]="product"></app-product-item>
+    </div>
+  </div>
+</ng-template>

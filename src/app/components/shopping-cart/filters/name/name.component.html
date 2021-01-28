@@ -1,0 +1,10 @@
+<form
+  (ngSubmit)="onSubmitFilterByName(filterByName.value)"
+  [formGroup]="filterByName"
+>
+  <div class="mb-3">
+    <label for="exampleFormControlInput1" class="form-label">Nombre</label>
+    <input class="form-control" formControlName='name'/>
+  </div>
+  <button class="btn btn-primary btn-block">Filtrar por nombre</button>
+</form>

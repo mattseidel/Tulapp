@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "tulapp-87336": {
+      "hosting": {
+        "tul-project": [
+          "tulapp-87336"
+        ]
+      }
+    }
+  }
+}

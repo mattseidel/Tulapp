@@ -1,0 +1,28 @@
+<div class="card mb-4 box-shadow">
+  <img
+    class="card-img-top"
+    data-src="holder.js/100px225?theme=thumb&amp;bg=55595c&amp;fg=eceeef&amp;text=Thumbnail"
+    alt="Thumbnail [100%x225]"
+    style="height: 225px; width: 100%; display: block"
+    src="{{ productItem?.imageUrl }}"
+    data-holder-rendered="true"
+  />
+  <div class="card-body">
+    <strong class="text-muted"
+      >{{ productItem?.price | currency: "USD" }}
+    </strong>
+    <p class="card-text">
+      {{ productItem?.description }}
+    </p>
+
+    <div class="btn-group d-flex justify-content-center">
+      <button
+        type="button"
+        class="btn btn-sm btn-outline-primary d-flex justify-content-around"
+        (click)="onAddCart(productItem)"
+      >
+        <i class="fas fa-cart-plus"></i> Añadir al carrito
+      </button>
+    </div>
+  </div>
+</div>
