@@ -1,0 +1,49 @@
+<div class="card">
+  <div class="card-header">Nuevo Producto</div>
+  <form
+    class="card-body"
+    (ngSubmit)="onSave(newProductForm.value)"
+    [formGroup]="newProductForm"
+  >
+    <div class="mb-3">
+      <label for="exampleFormControlInput1" class="form-label">Nombre</label>
+      <input
+        type="text"
+        class="form-control"
+        formControlName="name"
+        autofocus
+      />
+    </div>
+    <div class="mb-3">
+      <label for="exampleFormControlInput1" class="form-label"
+        >Descripción</label
+      >
+      <textarea class="form-control" formControlName="description"></textarea>
+    </div>
+    <div class="mb-3">
+      <label for="exampleFormControlInput1" class="form-label">precio</label>
+      <input type="number" class="form-control" formControlName="price" />
+    </div>
+    <div class="mb-3">
+      <label for="exampleFormControlInput1" class="form-label"
+        >Url de la imagen</label
+      >
+      <input type="url" class="form-control" formControlName="imageUrl" />
+    </div>
+    <div class="mb-3">
+      <label for="exampleFormControlInput1" class="form-label">Categoria</label>
+      <select class="form-control" formControlName="category">
+        <option *ngFor="let category of categories" [value]="category.name">
+          {{ category.name | titlecase }}
+        </option>
+      </select>
+    </div>
+    <button
+      type="submit"
+      [disabled]="!newProductForm.valid"
+      class="btn btn-success btn-block"
+    >
+      Guardar
+    </button>
+  </form>
+</div>

@@ -1,20 +1,23 @@
-<div *ngIf="loading;else noLoading" f class="spinner-border" role="status">
-  <span class="visually-hidden">Cargando...</span>
+<div class="mb-4">
+  <button class="btn btn-primary btn-block" (click)="onNewProduct()">
+    Agregar nuevo producto
+  </button>
+  <button class="btn btn-secondary btn-block" (click)="onNewCategory()">
+    Agregar nuevo producto
+  </button>
 </div>
 
-<ng-template #noLoading>
-  <div
-    class="alert alert-danger"
-    *ngIf="productList.length === 0; else elseTemplate"
-  >
-    Ningún elemento se ajusta a sus preferencias de búsqueda
-  </div>
+<div
+  class="alert alert-danger"
+  *ngIf="productList.length === 0; else elseTemplate"
+>
+  Ningún elemento se ajusta a sus preferencias de búsqueda
+</div>
 
-  <ng-template #elseTemplate>
-    <div class="row">
-      <div class="col-md-6" *ngFor="let product of productList">
-        <app-product-item [productItem]="product"></app-product-item>
-      </div>
+<ng-template #elseTemplate>
+  <div class="row">
+    <div class="col-md-6" *ngFor="let product of productList">
+      <app-product-item [productItem]="product"></app-product-item>
     </div>
-  </ng-template>
+  </div>
 </ng-template>

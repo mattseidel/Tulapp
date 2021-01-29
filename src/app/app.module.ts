@@ -19,6 +19,8 @@ import { CartComponent } from './components/shopping-cart/cart/cart.component';
 import { AngularFireModule } from '@angular/fire';
 import { environment } from 'src/environments/environment';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { LoginComponent } from './components/auth/login/login.component';
+import { RegisterComponent } from './components/auth/register/register.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -31,6 +33,8 @@ import { AngularFirestore } from '@angular/fire/firestore';
     ProductItemComponent,
     PriceComponent,
     NameComponent,
+    LoginComponent,
+    RegisterComponent,
   ],
   imports: [
     BrowserModule,

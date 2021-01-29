@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {
   AngularFirestore,
   AngularFirestoreCollection,
+  DocumentChange,
 } from '@angular/fire/firestore';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
@@ -12,7 +13,7 @@ import { Product } from '../class/product';
   providedIn: 'root',
 })
 export class ProductService {
-  productObservable: Observable<Product[]>;
+  productObservable: Observable<any[]>;
   private productsFireStore: AngularFirestoreCollection<Product>;
 
   loading = true;
@@ -21,24 +22,37 @@ export class ProductService {
 
   category: Category[] = [];
 
-  obsArray: BehaviorSubject<Product[]> = new BehaviorSubject<Product[]>([]);
+  obsArray: BehaviorSubject<Product[]> = new BehaviorSubject<any[]>([]);
   productArray$: Observable<Product[]> = this.obsArray.asObservable();
 
   constructor(private afs: AngularFirestore) {
     this.productsFireStore = this.afs.collection<Product>('products');
-    this.productObservable = this.productsFireStore
-      .snapshotChanges()
-      .pipe(
-        map((actions) => actions.map((a) => a.payload.doc.data() as Product))
-      );
+    this.productObservable = this.productsFireStore.snapshotChanges().pipe(
+      map((actions) =>
+        actions.map(({ payload }) => {
+          return new Product(
+            payload.doc.id,
+            this.getPayloadDoc(payload, 'name'),
+            this.getPayloadDoc(payload, 'description'),
+            this.getPayloadDoc(payload, 'price'),
+            this.getPayloadDoc(payload, 'imageUrl'),
+            this.getPayloadDoc(payload, 'category')
+          );
+        })
+      )
+    );
     this.initializateProductArray();
+  }
+
+  getPayloadDoc(payload: DocumentChange<Product>, name: string): any {
+    return payload.doc.get(name);
   }
 
   private initializateProductArray(): void {
     this.productObservable.subscribe((product) => {
       this.products = product;
       this.resetFilters();
-      this.loading = false;
+      console.log(product);
     });
   }
 
@@ -64,13 +78,6 @@ export class ProductService {
     });
   }
 
-  filterProoductByCategory(data: string): any {
-    this.productArray$.pipe(take(1)).subscribe(() => {
-      const newProduct = this.getFilteredByCategory(this.products, data);
-      this.obsArray.next(newProduct);
-    });
-  }
-
   filterProoductByName(name: string) {
     if (name === '') {
       this.resetFilters();
@@ -82,18 +89,17 @@ export class ProductService {
     }
   }
 
-  private getFilteredByCategory(
-    productArray: Product[],
-    category: string
-  ): Product[] {
-    return productArray.filter((data) => data.category.name.includes(category));
-  }
+  
 
   private getFilteredByNammeProducts(
     productArray: Product[],
     name: string
   ): Product[] {
-    return productArray.filter((data) => data.name.includes(name));
+    return productArray.filter((data) => {
+      const dataFilter = data.name.toLocaleLowerCase();
+
+      return dataFilter.includes(name.toLowerCase());
+    });
   }
   private getFilteredProducts(
     productArray: Product[],
@@ -101,5 +107,28 @@ export class ProductService {
     to: number
   ): Product[] {
     return productArray.filter((data) => data.price > from && data.price < to);
+  }
+
+  onDeleteProduct(productid: string): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const result = this.productsFireStore.doc(productid).delete();
+        resolve(result);
+      } catch (error) {
+        reject(error.message);
+      }
+    });
+  }
+  onSaveProduct(product: Product, productId?: string): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const id = productId || this.afs.createId();
+        const data = { ...product };
+        const result = this.productsFireStore.doc(id).set(data);
+        resolve(result);
+      } catch (error) {
+        reject(error.message);
+      }
+    });
   }
 }

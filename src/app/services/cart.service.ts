@@ -1,4 +1,8 @@
 import { Injectable, Output } from '@angular/core';
+import {
+  AngularFirestore,
+  AngularFirestoreCollection,
+} from '@angular/fire/firestore';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { Cart } from '../class/cart';
@@ -7,14 +11,12 @@ import { Cart } from '../class/cart';
   providedIn: 'root',
 })
 export class CartService {
-  @Output() cartList: Cart[] = [
-    // new Cart('1', 'ewa', 'product 1', 1, 12),
-    // new Cart('2', '12wa', 'product 2', 2, 15),
-  ];
+  @Output() cartList: Cart[] = [];
 
   obsArray: BehaviorSubject<Cart[]> = new BehaviorSubject<Cart[]>([]);
   cartArray$: Observable<Cart[]> = this.obsArray.asObservable();
   subject = new Subject<Cart>();
+  cartCollection: AngularFirestoreCollection<any>;
 
   addItemToCartList(cartItem: Cart) {
     this.cartArray$.pipe(take(1)).subscribe((oldCartList) => {
@@ -47,7 +49,9 @@ export class CartService {
     return this.obsArray.asObservable();
   }
 
-  constructor() {}
+  constructor(private afs: AngularFirestore) {
+    this.cartCollection = afs.collection<any>('cart');
+  }
 
   private removeItemFromList(cartList: Cart[], cartItem: Cart) {
     return cartList.filter((item) => item.productId !== cartItem.productId);
@@ -75,5 +79,36 @@ export class CartService {
       }
       return cart;
     });
+  }
+  onMakeBuy(userId: string, total: number): Promise<void> {
+    return new Promise((resolve, reject) => {
+      try {
+        this.getCartList().subscribe((data) => {
+          const id = this.afs.createId();
+
+          const budgets = data.map(({ name, price, qty, productId }) => {
+            return { name, price, qty, productId };
+          });
+          const newData = { comprador: userId, ...budgets, total };
+
+          console.log(newData);
+
+          const result = this.cartCollection.doc(id).set(newData);
+
+          resolve(result);
+        });
+      } catch (error) {
+        reject(error.message);
+      }
+    });
+  }
+  clearCart() {
+    this.cartArray$.pipe(take(1)).subscribe((oldCartList) => {
+      const newCartList = this.removeAll(oldCartList);
+      this.obsArray.next(newCartList);
+    });
+  }
+  private removeAll(cartList: Cart[]) {
+    return cartList.filter((item) => item.productId !== item.productId);
   }
 }

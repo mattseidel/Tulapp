@@ -14,16 +14,31 @@
     <a class="navbar-brand" href="#">TUL Compras</a>
     <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
       <li class="nav-item active">
-        <a class="nav-link"  >Home </a>
+        <a class="nav-link" [routerLink]="['/']">Home </a>
       </li>
     </ul>
-    <ul class="navbar-nav mt-2 mt-lg-0">
-      <li class="nav-item active">
-        <a class="nav-link"   >Login </a>
-      </li>
-      <li class="nav-item active">
-        <a class="nav-link"  >Registrarse </a>
-      </li>
-    </ul>
+    <div *ngIf="isLoggedIn">
+      <ul class="navbar-nav mt-2 mt-lg-0">
+        <li class="nav-item">
+          <button class="btn btn-danger btn-sm" (click)="onLogout()">Salir</button>
+        </li>
+      </ul>
+    </div>
+
+    <ng-container *ngIf="!isLoggedIn">
+      <ul class="navbar-nav mt-2 mt-lg-0">
+        <li class="nav-item active">
+          <a class="nav-link" [routerLink]="['/login']">Login </a>
+        </li>
+        <li class="nav-item active">
+          <a
+            class="nav-link"
+            [routerLink]="['/register']"
+            routerLinkActive="router-link-active"
+            >Registrarse
+          </a>
+        </li>
+      </ul>
+    </ng-container>
   </div>
 </nav>

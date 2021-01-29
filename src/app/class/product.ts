@@ -6,7 +6,7 @@ export class Product {
   description?: string;
   price: number;
   imageUrl: string;
-  category: { name: string };
+  category: string;
 
   constructor(
     id: string,
@@ -14,7 +14,7 @@ export class Product {
     description: string = '',
     price: number,
     imageUrl: string = 'https://www.solumex.com/wp-content/uploads/2013/11/dummy-image-landscape.jpg',
-    category: { name: string }
+    category: string
   ) {
     this.id = id;
     this.name = name;
